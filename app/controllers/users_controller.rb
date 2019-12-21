@@ -82,7 +82,7 @@ class UsersController < ApplicationController
     ).sample
 
       if user
-        render json: {data: {user: UserBlueprint.render(current), match: match}}
+        render json: {data: {user: UserBlueprint.render(user), match: match}}
       else
         render json: {data: 'Stop using this app'}
       end

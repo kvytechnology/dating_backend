@@ -91,6 +91,12 @@ class UsersController < ApplicationController
     end
   end
 
+  def matches
+    users = User.where('? = ANY(potentials)', current_user.id.to_s).where(id: current_user.potentials)
+
+    render json: {data: users}
+  end
+
   private
 
   def update_params

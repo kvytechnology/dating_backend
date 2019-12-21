@@ -1,9 +1,8 @@
 class UserBlueprint < Blueprinter::Base
   identifier :id
 
-  fields :email
+  fields :email, :name, :gender, :age, :bio
   field :authentication_token do |user, _options|
-    p user
     JwtService.encode({user_id: user.id})
   end
 end

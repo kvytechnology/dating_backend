@@ -45,12 +45,49 @@ class UsersController < ApplicationController
     end
   end
 
+  def reject
+    user = User.find_by(id: params[:reject_id])
+
+    if user
+      current_user.uninterested << user.id
+      current_user.save
+
+      render json: {data: 'updated'}
+    else
+      render json: {errors: 'invalid request'}
+    end
+  end
+
   def potential_match
-    if User.find_by(id: params[:potential_id])
+    potential = User.find_by(id: params[:potential_id])
+    if potential
       current_user.potentials << params[:potential_id]
       current_user.save
 
-      head 200
+      if potential.potentials.include? current_user.id.to_s
+        return render json: {data: 'matched'}
+      end
+
+      reject_ids = current_user.uninterested + current_user.potentials
+      below_age = current_user.age - 5
+      above_age = current_user.age + 5
+      gender =
+        case current_user.gender
+        when 'male'
+          'female'
+        when 'female'
+          'male'
+        end
+
+      user = User.where.not(id: reject_ids).where('age BETWEEN ? AND ?', below_age, above_age).where(
+      gender: gender
+    ).sample
+
+      if user
+        render json: UserBlueprint.render(current, root: :data)
+      else
+        render json: {data: 'Stop using this app'}
+      end
     else
       render json: {errors: 'invalid request'}
     end

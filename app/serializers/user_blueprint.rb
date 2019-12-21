@@ -3,7 +3,7 @@ class UserBlueprint < Blueprinter::Base
 
   fields :email, :name, :gender, :age, :bio
 
-  view :radar do |user, _options|
+  view :radar do
     association :images, blueprint: ImageBlueprint
   end
 end

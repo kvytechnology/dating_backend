@@ -9,7 +9,7 @@ class UsersController < ApplicationController
     @user = User.new(create_params)
 
     if @user.save
-      render json: UserBlueprint.render(@user, root: :data)
+      render json: SessionBlueprint.render(@user, root: :data)
     else
       render json: @user.errors, status: :unprocessable_entity
     end
@@ -17,7 +17,7 @@ class UsersController < ApplicationController
 
   def update
     if current_user.update(update_params)
-      render json: current_user
+      render json: UserBlueprint.render(current_user, root: :data)
     else
       render json: current_user.errors, status: :unprocessable_entity
     end

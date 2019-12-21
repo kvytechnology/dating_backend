@@ -64,9 +64,7 @@ class UsersController < ApplicationController
       current_user.potentials << params[:potential_id]
       current_user.save
 
-      if potential.potentials.include? current_user.id.to_s
-        return render json: {data: 'matched'}
-      end
+      match = potential.potentials.include?(current_user.id.to_s)
 
       reject_ids = current_user.uninterested + current_user.potentials
       below_age = current_user.age - 5
@@ -84,7 +82,7 @@ class UsersController < ApplicationController
     ).sample
 
       if user
-        render json: UserBlueprint.render(current, root: :data)
+        render json: {data: {user: UserBlueprint.render(current), match: match}}
       else
         render json: {data: 'Stop using this app'}
       end

@@ -1,9 +1,8 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :update, :destroy]
   before_action :authenticate_user, except: [:create]
 
   def show
-    render json: UserBlueprint.render(@user, root: :data)
+    render json: UserBlueprint.render(current_user, root: :data)
   end
 
   def create
@@ -17,10 +16,10 @@ class UsersController < ApplicationController
   end
 
   def update
-    if @user.update(update_params)
-      render json: @user
+    if current_user.update(update_params)
+      render json: current_user
     else
-      render json: @user.errors, status: :unprocessable_entity
+      render json: current_user.errors, status: :unprocessable_entity
     end
   end
 
@@ -36,10 +35,6 @@ class UsersController < ApplicationController
   end
 
   private
-
-  def set_user
-    @user = User.find(params[:id])
-  end
 
   def update_params
     params.permit(:name, :bio, :age, :gender)

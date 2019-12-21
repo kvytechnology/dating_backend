@@ -1,6 +1,28 @@
 class UsersController < ApplicationController
   before_action :authenticate_user, except: [:create]
 
+  def radar
+    reject_ids = current_user.uninterested
+    below_age = current_user.age - 5
+    above_age = current_user.age + 5
+    gender =
+      case current_user.gender
+      when 'male'
+        'female'
+      when 'female'
+        'male'
+      end
+    user = User.where.not(id: reject_ids).where('age BETWEEN ? AND ?', below_age, above_age).where(
+      gender: gender
+    ).sample
+
+    if user
+      render json: UserBlueprint.render(user, root: :data, view: :radar)
+    else
+      render json: {errors: 'update your profile to find people'}
+    end
+  end
+
   def show
     render json: UserBlueprint.render(current_user, root: :data)
   end

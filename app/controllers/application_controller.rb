@@ -4,12 +4,9 @@ class ApplicationController < ActionController::API
   private
 
   def authenticate_user
-    p request.headers['Authorization']
     token = request.headers['Authorization']&.gsub("Bearer ", "")
-    p token
 
     payload = JwtService.decode(token)
-    p payload
 
     return render json: {errors: 'invalid request'} unless payload
 

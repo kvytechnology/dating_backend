@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_21_064112) do
+ActiveRecord::Schema.define(version: 2019_12_21_081238) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -35,6 +35,7 @@ ActiveRecord::Schema.define(version: 2019_12_21_064112) do
     t.integer "age"
     t.string "gender"
     t.text "potentials", default: [], array: true
+    t.text "uninterested", default: [], array: true
   end
 
 end
